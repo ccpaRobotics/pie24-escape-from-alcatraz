@@ -9,16 +9,24 @@ def full_speedahead(lv,rv):
     Robot.set_value(drive_motor, "velocity_a", -lv * PWR)
     Robot.set_value(drive_motor, "velocity_b", rv * PWR)
     
-def move_arm(direction):
-    PWR = 10
-    Robot.set_value(arm_motor, "velocity_a", direction * PWR)
+#def move_arm(direction):
+    # global arm_position
+    #PWR = 10
+    #Robot.set_value(arm_motor, "velocity_b", direction * PWR)
+    # if arm_position == 0:
+    #     arm_position = 1
+    # elif arm_position == 1:
+    #     arm_position = 0
     
 def teleop_setup():
     global servo_status
-    global arm_position
+    # global arm_position
     servo_status = 0
     arm_position = 0
-    Robot.set_value(servo, "servo0", 0.9)
+    #Robot.set_value(arm_motor, "velocity_a", 1.0)
+    #Robot.set_value(arm_motor, "velocity_b", 1.0)
+    #print(Robot.get_value(arm_motor, "velocity_a"))
+    #print(Robot.get_value(arm_motor, "velocity_b"))
     print ("Tele-operated mode has started!")
 
 def teleop_main():
@@ -44,20 +52,27 @@ def teleop_main():
     # arm
     dpad_up = Gamepad.get_value("dpad_up")
     dpad_down = Gamepad.get_value("dpad_down")
+    # dpad_left = Gamepad.get_value("dpad_left")
     
-    if dpad_up and arm_position == 0:
+    if dpad_up: #and arm_position == 0:
         print("dpad_up pressed")
-        move_arm(-1)
+        print(arm_position)
+        Robot.set_value(arm_motor, "velocity_a", 1 * -1.0)
+        Robot.set_value(arm_motor, "velocity_b", 1 * -1.0)
         arm_position = 1
         
-    if dpad_down and arm_position == 1:
+    elif dpad_down: #and arm_position == 1:
         print("dpad_down pressed")
-        move_arm(1)
+        print(arm_position)
+        Robot.set_value(arm_motor, "velocity_a", 1 * 1.0)
+        Robot.set_value(arm_motor, "velocity_b", 1 * 1.0)
         arm_position = 0
-
         #cannot go below 0
-    
-        
+
+    else:
+        Robot.set_value(arm_motor,"velocity_a",0.0)
+        Robot.set_value(arm_motor,"velocity_b",0.0)
+
     # drivetrain
     right_y = Gamepad.get_value("joystick_right_y")
     right_x = Gamepad.get_value("joystick_right_x")
